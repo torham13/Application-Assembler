@@ -1,0 +1,43 @@
+{
+  "dependencies": {
+    "firebase": "^12.3.0",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1"
+  },
+  "name": "application-assembler",
+  "version": "1.0.0",
+  "description": "An app to help create cover letters for job applications.",
+  "main": "index.js",
+  "devDependencies": {
+    "concurrently": "^9.2.1",
+    "esbuild": "^0.25.10",
+    "http-server": "^14.1.1",
+    "live-server": "^1.2.0"
+  },
+  "scripts": {
+    "test": "echo \"No tests written yet, but coming soon!\" && exit 0",
+    "build": "node ./esbuild.config.js",
+    "watch-esbuild": "node ./esbuild.config.js --watch",
+    "serve-app": "live-server public --open --wait=500",
+    "start": "npm run build && concurrently \"npm run serve-app\" \"npm run watch-esbuild\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/torham13/Application-Assembler.git"
+  },
+  "keywords": [
+    "cover",
+    "letter",
+    "job",
+    "application",
+    "personal",
+    "traits",
+    "firebase"
+  ],
+  "author": "Torbjørn Hamre",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/torham13/Application-Assembler/issues"
+  },
+  "homepage": "https://github.com/torham13/Application-Assembler#readme"
+}
