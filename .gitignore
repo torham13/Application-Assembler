@@ -46,6 +46,7 @@ build/Release
 
 # Dependency directories
 node_modules/
+functions/node_modules/
 
 # Optional npm cache directory
 .npm
@@ -67,6 +68,8 @@ node_modules/
 
 # dataconnect generated files
 .dataconnect
+dataconnect/.dataconnect/
+dataconnect/dist/
 
-# esbuild build output
+# Build output
 public/bundle.js
