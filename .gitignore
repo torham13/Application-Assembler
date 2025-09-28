@@ -73,3 +73,6 @@ dataconnect/dist/
 
 # Build output
 public/bundle.js
+
+# dotenv environment variables file
+.env

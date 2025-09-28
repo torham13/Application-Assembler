@@ -10,6 +10,7 @@
   "main": "index.js",
   "devDependencies": {
     "concurrently": "^9.2.1",
+    "dotenv": "^17.2.2",
     "esbuild": "^0.25.10",
     "http-server": "^14.1.1",
     "live-server": "^1.2.0"
