@@ -1,52 +1,181 @@
-# Example schema for simple movie review app
+#import "enums.gql"
 
-# User table is keyed by Firebase Auth UID.
-type User @table {
-  # `@default(expr: "auth.uid")` sets it to Firebase Auth UID during insert and upsert.
-  id: String! @default(expr: "auth.uid")
-  username: String! @col(dataType: "varchar(50)")
-  # The `user: User!` field in the Review table generates the following one-to-many query field.
-  #  reviews_on_user: [Review!]!
-  # The `Review` join table the following many-to-many query field.
-  #  movies_via_Review: [Movie!]!
-}
+scalar DateTime
 
-# Movie is keyed by a randomly generated UUID.
-type Movie @table {
-  # If you do not pass a 'key' to `@table`, Data Connect automatically adds the following 'id' column.
-  # Feel free to uncomment and customize it.
-  #  id: UUID! @default(expr: "uuidV4()")
+# Job(title, company, language)
+# PK: {title, company}
+type Job @model(queries: { find: true, findMany: true }) {
+  id: UUID! @primaryKey
   title: String!
-  imageUrl: String!
-  genre: String
+  company: String!
+  language: Language!
+  createdAt: DateTime!
+  updatedAt: DateTime!
 }
 
-# MovieMetadata is a metadata attached to a Movie.
-# Movie <-> MovieMetadata is a one-to-one relationship
-type MovieMetadata @table {
-  # @unique ensures each Movie can only one MovieMetadata.
-  movie: Movie! @unique
-  # The movie field adds the following foreign key field. Feel free to uncomment and customize it.
-  #  movieId: UUID!
-  rating: Float
-  releaseYear: Int
-  description: String
+# Argument(id, language, contents)
+# PK: {id}
+# CK: {language, contents}
+type Argument @model(queries: { find: true, findMany: true }) {
+  id: UUID! @primaryKey
+  language: Language!
+  contents: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  @unique(fields: ["language", "contents"])
 }
 
-# Reviews is a join table between User and Movie.
-# It has a composite primary keys `userUid` and `movieId`.
-# A user can leave reviews for many movies. A movie can have reviews from many users.
-# User  <-> Review is a one-to-many relationship
-# Movie <-> Review is a one-to-many relationship
-# Movie <-> User is a many-to-many relationship
-type Review @table(name: "Reviews", key: ["movie", "user"]) {
-  user: User!
-  # The user field adds the following foreign key field. Feel free to uncomment and customize it.
-  #  userUid: String!
-  movie: Movie!
-  # The movie field adds the following foreign key field. Feel free to uncomment and customize it.
-  #  movieId: UUID!
-  rating: Int
-  reviewText: String
-  reviewDate: Date! @default(expr: "request.time")
+# Trait(id, type)
+# PK: {id}
+type Trait @model(queries: { find: true, findMany: true }) {
+  id: UUID! @primaryKey
+  type: TraitType!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+# Application(id, created, sent, title, company)
+# PK: {id}
+# CK: {title, company, created}
+# FK: (title, company) -> Job(title, company)
+type Application @model(queries: { find: true, findMany: true }) {
+  id: UUID! @primaryKey
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  sent: DateTime # Nullable if not sent yet
+  
+  # Foreign Key to Job (composite primary key)
+  job_id: UUID!
+  job: Job! @hasOne(references: [{field: "job_id", by: "id"}])
+
+  @unique(fields: ["job_id", "createdAt"])
+}
+
+# Document(id, type, application)
+# PK: {id}
+# CK: {type, application}
+# FK: (application) -> Application(id)
+type Document @model(queries: { find: true, findMany: true }) {
+  id: UUID! @primaryKey
+  type: DocumentType! # Added 'type' field as per schema refinement
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  
+  # Foreign Key to Application
+  application_id: UUID!
+  application: Application! @hasOne(references: [{field: "application_id", by: "id"}])
+
+  @unique(fields: ["type", "application_id"]) # Ensures one type of document per application
+}
+
+# Section(id, type, order, document)
+# PK: {id}
+# CK: {type, document}, {order, document}
+# FK: (document) -> Document(id)
+type Section @model(queries: { find: true, findMany: true }) {
+  id: UUID! @primaryKey
+  type: SectionType!
+  order: Int!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  
+  # Foreign Key to Document
+  document_id: UUID!
+  document: Document! @hasOne(references: [{field: "document_id", by: "id"}])
+
+  @unique(fields: ["type", "document_id"])  # Ensures one type of section per document
+  @unique(fields: ["order", "document_id"]) # Ensures unique order within a document
+}
+
+# Description(id, posted, deadline, contents, title, company)
+# PK: {id}
+# CK: {title, company, posted}, {title, company, contents}
+# FK: (title, company) -> Job(title, company)
+type Description @model(queries: { find: true, findMany: true }) {
+  id: UUID! @primaryKey
+  posted: DateTime!
+  deadline: DateTime
+  contents: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  
+  # Foreign Key to Job (composite primary key)
+  job_id: UUID!
+  job: Job! @hasOne(references: [{field: "job_id", by: "id"}])
+
+  @unique(fields: ["job_id", "posted"])
+  @unique(fields: ["job_id", "contents"])
+}
+
+# Topic(label, trait, argument) - Join Table
+# PK: {trait, argument}
+# FK: (trait) -> Trait(id)
+#     (argument) -> Argument(id)
+type Topic @model(queries: { find: true, findMany: true }) {
+  # Composite Primary Key
+  trait_id: UUID! @primaryKey
+  argument_id: UUID! @primaryKey
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  
+  label: String! # Attribute of the relationship
+  
+  trait: Trait! @hasOne(references: [{field: "trait_id", by: "id"}])
+  argument: Argument! @hasOne(references: [{field: "argument_id", by: "id"}])
+}
+
+# Section_has(order, section, argument) - Join Table (Renamed to SectionArgument for clarity)
+# PK: {section, order}
+# CK: {section, argument}
+# FK: (section) -> Section(id)
+#     (argument) -> Argument(id)
+type SectionArgument @model(queries: { find: true, findMany: true }) {
+  # Composite Primary Key
+  section_id: UUID! @primaryKey
+  order: Int! @primaryKey
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  
+  # Foreign Key to Argument
+  argument_id: UUID!
+  
+  section: Section! @hasOne(references: [{field: "section_id", by: "id"}])
+  argument: Argument! @hasOne(references: [{field: "argument_id", by: "id"}])
+  
+  @unique(fields: ["section_id", "argument_id"]) # Ensures an argument isn't duplicated in a section
+}
+
+# Requests(label, trait, description) - Join Table (Renamed to TraitDescriptionRequest for clarity)
+# PK: {trait, description}
+# FK: (trait) -> Trait(id)
+#     (description) -> Description(id)
+type TraitDescriptionRequest @model(queries: { find: true, findMany: true }) {
+  # Composite Primary Key
+  trait_id: UUID! @primaryKey
+  description_id: UUID! @primaryKey
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  
+  label: String! # Attribute of the relationship
+  
+  trait: Trait! @hasOne(references: [{field: "trait_id", by: "id"}])
+  description: Description! @hasOne(references: [{field: "description_id", by: "id"}])
+}
+
+# URL(id, description, url)
+# PK: {id}
+# CK: {description, url}
+# FK: (description) -> Description(id)
+type Url @model(queries: { find: true, findMany: true }) { # Renamed to Url (singular)
+  id: UUID! @primaryKey
+  
+  # Foreign Key to Description
+  description_id: UUID!
+  url: String! # TODO: Consider URL scalar type validation
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  
+  description: Description! @hasOne(references: [{field: "description_id", by: "id"}])
+
+  @unique(fields: ["description_id", "url"]) # Ensures no duplicate URLs for the same description
 }

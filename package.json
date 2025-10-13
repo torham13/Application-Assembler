@@ -1,14 +1,18 @@
 {
   "dependencies": {
+    "@apollo/client": "^4.0.7",
     "firebase": "^12.3.0",
+    "graphql": "^16.11.0",
     "react": "^19.1.1",
-    "react-dom": "^19.1.1"
+    "react-dom": "^19.1.1",
+    "uuid": "^13.0.0"
   },
   "name": "application-assembler",
   "version": "1.0.0",
   "description": "An app to help create cover letters for job applications.",
   "main": "index.js",
   "devDependencies": {
+    "@types/uuid": "^10.0.0",
     "concurrently": "^9.2.1",
     "dotenv": "^17.2.2",
     "esbuild": "^0.25.10",
