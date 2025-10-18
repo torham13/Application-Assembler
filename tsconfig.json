@@ -1,0 +1,32 @@
+{
+  "compilerOptions": {
+    "target": "es2020", // Use a modern ECMAScript target
+    "lib": ["dom", "dom.iterable", "esnext"], // Standard libraries for web apps
+    "allowJs": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "noFallthroughCasesInSwitch": true,
+    "module": "esnext", // Crucial for modern module resolution
+    "moduleResolution": "node", // Crucial for Node-style module resolution
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react-jsx",
+    "baseUrl": "./",
+    "paths": {
+      "@/*": ["src/*"]
+    }
+  },
+  "include": [
+    "src",
+    "src/env.d.ts",
+    "esbuild.config.js"
+  ],
+  "exclude": [
+    "node_modules",
+    "public"
+  ]
+}

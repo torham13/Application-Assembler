@@ -12,7 +12,7 @@ function defineEnvVar<K extends string, T>(metadata: EnvVarMetadata<K, T>): EnvV
 
 // 2. This is your "ONE SPOT": an array of all client-side environment variable definitions.
 //    The `as const` assertion is CRUCIAL for TypeScript to infer the most specific types.
-const envVarDefinitions = [
+export const envVarDefinitions = [
   defineEnvVar({
     name: 'VITE_FIREBASE_DATACONNECT_URL',
     type: 'string',

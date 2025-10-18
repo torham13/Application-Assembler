@@ -1,8 +1,25 @@
 const esbuild = require('esbuild');
 require('dotenv').config();
-const { envVarDefinitions, getClientEnvVar } = require('./src/env-config');
 
 async function runBuild() {
+  const envConfigModule = require('./src/env-config');
+
+  console.log("--- DEBUG: Full envConfigModule object ---");
+  console.log(envConfigModule);
+
+  console.log("\n--- DEBUG: envVarDefinitions property ---");
+  console.log(envConfigModule.envVarDefinitions);
+
+  console.log("\n--- DEBUG: Type of envVarDefinitions property ---");
+  console.log(typeof envConfigModule.envVarDefinitions);
+
+  console.log("\n--- DEBUG: Is envVarDefinitions an Array? ---");
+  console.log(Array.isArray(envConfigModule.envVarDefinitions));
+
+  // Now, safely extract the variables, or throw if they're not there
+  const envVarDefinitions = envConfigModule.envVarDefinitions;
+  const getClientEnvVar = envConfigModule.getClientEnvVar;
+
   const isWatching = process.argv.includes('--watch');
 
   const defineEnv = {};

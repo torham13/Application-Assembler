@@ -1,7 +1,7 @@
 import { ApolloClient, InMemoryCache, HttpLink } from '@apollo/client';
 
 // Use process.env directly
-const dataConnectUri = process.env.VITE_FIREBASE_DATACONNECT_URL || 'http://localhost:9010/graphql';
+const dataConnectUri = process.env.VITE_FIREBASE_DATACONNECT_URL;
 
 const httpLink = new HttpLink({
   uri: dataConnectUri,

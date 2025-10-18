@@ -5,6 +5,8 @@ import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import { getAuth, connectAuthEmulator } from "firebase/auth";
 import App from './App'; // Import your main App component
+import client from './apollo-client'; // Your Apollo Client setup
+import { ApolloProvider } from '@apollo/client/react';
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -30,12 +32,16 @@ connectAuthEmulator(auth, "http://127.0.0.1:${process.env.VITE_FIREBASE_AUTH_EMU
 console.log("Firebase Auth connected to emulator!");
 
 const rootElement = document.getElementById('root');
-if (rootElement) {
-  ReactDOM.createRoot(rootElement).render(
-    <React.StrictMode>
-      <App />
-    </React.StrictMode>
-  );
-} else {
-  console.error("Root element not found to render React app.");
+if (!rootElement) {
+  throw new Error('Failed to find the root element with ID "root". Please ensure public/index.html has <div id="root"></div>');
 }
+
+const root = ReactDOM.createRoot(rootElement);
+
+root.render(
+  <React.StrictMode>
+    <ApolloProvider client={client}>
+      <App />
+    </ApolloProvider>
+  </React.StrictMode>
+);
