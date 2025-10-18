@@ -1,7 +1,8 @@
+// tsconfig.json
 {
   "compilerOptions": {
-    "target": "es2020", // Use a modern ECMAScript target
-    "lib": ["dom", "dom.iterable", "esnext"], // Standard libraries for web apps
+    "target": "es2020",
+    "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
@@ -9,8 +10,8 @@
     "strict": true,
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true,
-    "module": "esnext", // Crucial for modern module resolution
-    "moduleResolution": "node", // Crucial for Node-style module resolution
+    "module": "esnext",
+    "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
@@ -23,7 +24,7 @@
   "include": [
     "src",
     "src/env.d.ts",
-    "esbuild.config.js"
+    "esbuild.config.js" // Make sure this is still correct if it references TS code
   ],
   "exclude": [
     "node_modules",
