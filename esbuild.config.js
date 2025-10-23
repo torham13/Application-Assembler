@@ -2,31 +2,16 @@ const esbuild = require('esbuild');
 require('dotenv').config();
 
 async function runBuild() {
-  const envConfigModule = require('./src/env-config');
-
-  console.log("--- DEBUG: Full envConfigModule object ---");
-  console.log(envConfigModule);
-
-  console.log("\n--- DEBUG: envVarDefinitions property ---");
-  console.log(envConfigModule.envVarDefinitions);
-
-  console.log("\n--- DEBUG: Type of envVarDefinitions property ---");
-  console.log(typeof envConfigModule.envVarDefinitions);
-
-  console.log("\n--- DEBUG: Is envVarDefinitions an Array? ---");
-  console.log(Array.isArray(envConfigModule.envVarDefinitions));
+  const envConfigModule = require('./src/env-var/env-config');
 
   // Now, safely extract the variables, or throw if they're not there
-  const envVarDefinitions = envConfigModule.envVarDefinitions;
-  const getClientEnvVar = envConfigModule.getClientEnvVar;
+  const clientEnvVars = envConfigModule.EnvVars.getData();
 
   const isWatching = process.argv.includes('--watch');
 
   const defineEnv = {};
-  for (const def of envVarDefinitions) {
-    // getClientEnvVar correctly fetches from process.env or falls back to default.
-    // JSON.stringify is essential for esbuild's define replacement.
-    defineEnv[`process.env.${def.name}`] = JSON.stringify(getClientEnvVar(def.name));
+  for (const item of clientEnvVars) {
+    defineEnv[`process.env.${item.name}`] = item.value;
   }
 
   const config = {

@@ -1,5 +1,5 @@
 import React from 'react';
-import './App.css'; // Assuming you have a basic App.css file for styling
+//import './App.css'; // Assuming you have a basic App.css file for styling
 import CreateApplicationForm from './components/CreateApplicationForm'; // We'll create this next
 
 const App: React.FC = () => { // Explicitly type App as a React Functional Component

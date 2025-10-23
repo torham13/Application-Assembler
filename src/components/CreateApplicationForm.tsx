@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { useMutation, gql } from '@apollo/client';
+import { gql } from '@apollo/client';
+import { useMutation } from '@apollo/client/react';
 import { v4 as uuidv4 } from 'uuid';
 
 // Make sure your enums.gql is imported and compiled correctly

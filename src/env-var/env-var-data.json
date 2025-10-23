@@ -1,0 +1,52 @@
+[
+    {
+        "name": "VITE_FIREBASE_DATACONNECT_URL",
+        "defaultValue": "http://localhost:9010/graphql",
+        "description": "The URL for the Firebase Data Connect GraphQL endpoint."
+    },
+    {
+        "name": "VITE_FIREBASE_API_KEY",
+        "defaultValue": "",
+        "description": "The Firebase client-side API Key."
+    },
+    {
+        "name": "VITE_FIREBASE_AUTH_DOMAIN",
+        "defaultValue": "",
+        "description": "The Firebase authentication domain."
+    },
+    {
+        "name": "VITE_FIREBASE_PROJECT_ID",
+        "defaultValue": "",
+        "description": "The Firebase project ID."
+    },
+    {
+        "name": "VITE_FIREBASE_STORAGE_BUCKET",
+        "defaultValue": "",
+        "description": "The Firebase storage bucket URL."
+    },
+    {
+        "name": "VITE_FIREBASE_MESSAGING_SENDER_ID",
+        "defaultValue": "",
+        "description": "The Firebase messaging sender ID."
+    },
+    {
+        "name": "VITE_FIREBASE_APP_ID",
+        "defaultValue": "",
+        "description": "The Firebase application ID."
+    },
+    {
+        "name": "VITE_FIREBASE_MEASUREMENT_ID",
+        "defaultValue": "",
+        "description": "The Firebase measurement ID."
+    },
+    {
+        "name": "VITE_FIREBASE_AUTH_EMULATOR_PORT",
+        "defaultValue": 0,
+        "description": "The port number for the Firebase Auth emulator."
+    },
+    {
+        "name": "VITE_FIREBASE_DATA_CONNECT_EMULATOR_PORT",
+        "defaultValue": 0,
+        "description": "The port number for the Firebase Data Connect emulator."
+    }
+]
