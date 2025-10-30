@@ -1,4 +1,13 @@
 import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+// Compute a module-local directory that works in both CommonJS and ESM.
+// When running as ESM (esbuild, import.meta.url), __dirname is not defined,
+// so fall back to using fileURLToPath(import.meta.url).
+const moduleDir = (typeof __dirname !== 'undefined')
+    ? __dirname
+    : path.dirname(fileURLToPath(import.meta.url));
 
 interface EnvVarMetadataRaw<K extends string> {
     readonly name: K;
@@ -18,9 +27,13 @@ export class EnvVars {
     private static data: EnvVarMetadata<string>[];
 
     private constructor() {
-        const filePath: string = 'env-var-data.json';
+    const filePath: fs.PathLike = path.join(moduleDir, 'env-var-data.json');
+
+        console.log(`Attempting to load environment variable data from: ${filePath}`);
 
         if (fs.existsSync(filePath)) {
+            console.log(`Successfully found environment variable data file.`);
+            console.log(`Loading environment variable data from: ${filePath}`);
 
             const readData = fs.readFileSync(filePath, 'utf-8');
             const parsedData: EnvVarMetadataRaw<string>[] = JSON.parse(readData);

@@ -11,7 +11,10 @@ async function runBuild() {
 
   const defineEnv = {};
   for (const item of clientEnvVars) {
-    defineEnv[`process.env.${item.name}`] = item.value;
+    // esbuild expects define values to be valid JS literals (e.g. string literals
+    // must be quoted). Use JSON.stringify so strings/numbers/booleans are
+    // converted to proper JS literal representations.
+    defineEnv[`process.env.${item.name}`] = JSON.stringify(item.value);
   }
 
   const config = {

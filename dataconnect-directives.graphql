@@ -1,0 +1,45 @@
+# dataconnect-directives.graphql
+
+# Custom scalars used by Firebase Data Connect
+scalar UUID
+scalar DateTime # <--- Added this, as used in your schema
+scalar Any # A fallback scalar for flexible types if needed
+
+# Input type for the 'queries' argument of @model
+input ModelQueryConfigInput {
+  find: Boolean
+  findMany: Boolean
+  # Add any other specific query options if your schema uses them
+}
+
+# Input type for the 'mutations' argument of @model (assuming a similar structure)
+input ModelMutationConfigInput {
+  create: Boolean
+  update: Boolean
+  delete: Boolean
+  # Add any other specific mutation options if your schema uses them
+}
+
+# Input type for the 'references' argument of @hasOne
+input HasOneReferenceInput {
+  field: String!
+  by: String!
+}
+
+# Define the @model directive
+directive @model(
+  queries: ModelQueryConfigInput,
+  mutations: ModelMutationConfigInput,
+  subscriptions: ModelQueryConfigInput # Assuming subscriptions config structure is similar to queries
+) on OBJECT
+
+# Other Firebase Data Connect directives you might be using
+
+directive @primaryKey on FIELD_DEFINITION
+directive @table(key: String) on OBJECT # Keeping this for completeness, even if not directly in your current schema.
+directive @col(size: Int, dataType: String) on FIELD_DEFINITION # Added dataType as it often appears
+directive @default(expr: String!) on FIELD_DEFINITION
+directive @unique(fields: [String!]!) on FIELD_DEFINITION # <--- Corrected this to include 'fields' argument
+directive @hasOne(references: [HasOneReferenceInput!]!) on FIELD_DEFINITION # <--- Added this directive
+directive @hasMany(references: [HasOneReferenceInput!]!) on FIELD_DEFINITION # Often used alongside hasOne
+directive @ref on FIELD_DEFINITION # Used in some contexts for references

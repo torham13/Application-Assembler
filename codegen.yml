@@ -1,0 +1,27 @@
+schema:
+  - './dataconnect-directives.graphql'
+  - './dataconnect/schema/schema.gql'
+  - './dataconnect/schema/enums.gql'
+
+documents:
+  - 'src/**/*.graphql'
+  - 'src/**/*.ts'
+  - 'src/**/*.tsx'
+
+generates:
+  ./src/generated/graphql.ts:
+    plugins:
+      - 'typescript'
+      - 'typescript-operations'
+      - 'typescript-react-apollo'
+    config:
+      withHooks: true             # Generate React hooks (useQuery, useMutation, useSubscription)
+      withComponent: false         # Don't generate React components (less common now)
+      withHOC: false               # Don't generate Higher-Order Components (older pattern)
+      reactApolloVersion: 3        # Specify Apollo Client React version (3 or higher)
+
+      skipTypename: false          # Include __typename in generated types
+      enumsAsConst: true           # Generate enums as TypeScript const enums for strict typing
+      avoidOptionals:
+        field: true               # Generate non-optional fields for non-nullable GraphQL fields
+      pureMagicComment: true       # Add /*#__PURE__*/ comments for better tree-shaking
